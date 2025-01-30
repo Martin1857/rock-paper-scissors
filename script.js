@@ -1,6 +1,6 @@
 function getComputerChoice() {
     const choices = ['rock', 'paper', 'scissors'];
-    const randomNumber = Math.floor(Math.random() * 3);
+    const randomNumber = Math.floor(Math.random() * choices.length);
     return choices[randomNumber];
 }
 
@@ -14,40 +14,47 @@ function getHumanChoice() {
     }
 }
 
-console.log(getComputerChoice());
-
-let humanScore = 0;
-let computerScore = 0;
-
 function playRound(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) {
-        return 'It\'s a tie!';
-    } else if (humanChoice === 'rock' && computerChoice === 'scissors') {
-        humanScore++;
-        return 'You win! Rock beats scissors.';
-    } else if (humanChoice === 'scissors' && computerChoice === 'paper') {
-        humanScore++;
-        return 'You win! Scissors beats paper.';
-    } else if (humanChoice === 'paper' && computerChoice === 'rock') {
-        humanScore++;
-        return 'You win! Paper beats rock.';
+        return "It's a tie!";
+    } 
+
+    if (
+        (humanChoice === 'rock' && computerChoice === 'scissors') ||
+        (humanChoice === 'scissors' && computerChoice === 'paper') ||
+        (humanChoice === 'paper' && computerChoice === 'rock')
+    ) {
+        return `You win! ${humanChoice} beats ${computerChoice}.`;
     } else {
-        computerScore++;
         return `You lose! ${computerChoice} beats ${humanChoice}.`;
     }
 }
 
 function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
+    let resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = ""; 
+
     for (let i = 0; i < 5; i++) {
         const humanSelection = getHumanChoice();
         const computerSelection = getComputerChoice();
-        console.log(playRound(humanSelection, computerSelection));
+        const result = playRound(humanSelection, computerSelection);
+        
+        if (result.includes("You win")) {
+            humanScore++;
+        } else if (result.includes("You lose")) {
+            computerScore++;
+        }
+
+        resultsDiv.innerHTML += `<p>Round ${i + 1}: ${result}</p>`;
     }
+
     if (humanScore > computerScore) {
-        console.log('You win the game!');
+        resultsDiv.innerHTML += "<h2>Congratulations! You win the game! 🎉</h2>";
     } else if (humanScore < computerScore) {
-        console.log('You lose the game!');
+        resultsDiv.innerHTML += "<h2>You lost the game. Better luck next time! 😞</h2>";
     } else {
-        console.log('It\'s a tie!');
+        resultsDiv.innerHTML += "<h2>It's a tie! 🤝</h2>";
     }
 }
